@@ -883,7 +883,7 @@ table Fact_Inspection
 					                    if Premier = null then null else Text.Proper(Premier),
 					        type nullable text
 				    ),
-
+				
 					    // 13. Rattachement au site (périmètre de la revue)
 					    Zone = Table.AddColumn(
 					        InspecteurNormalise,
