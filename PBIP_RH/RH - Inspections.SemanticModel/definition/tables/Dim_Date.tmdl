@@ -120,17 +120,30 @@ table Dim_Date
 	partition Dim_Date = calculated
 		mode: import
 		source = ```
-				VAR MinDate =
+				VAR MinRecep =
 				    MIN ( Fact_Inspection[Date réception valide] )
+				VAR MaxRecep =
+				    MAX ( Fact_Inspection[Date réception valide] )
+				VAR MaxCloture =
+				    MAX ( Fact_Inspection[Date clôture valide] )
+				VAR MinDate =
+				    MinRecep
 				VAR MaxDate =
-				    MAX (
-				        COALESCE (
-				            MAX ( Fact_Inspection[Date clôture valide] ),
-				            MAX ( Fact_Inspection[Date réception valide] )
+				    IF (
+				        ISBLANK ( MaxCloture ),
+				        MaxRecep,
+				        IF (
+				            ISBLANK ( MaxRecep ),
+				            MaxCloture,
+				            IF ( MaxCloture > MaxRecep, MaxCloture, MaxRecep )
 				        )
 				    )
 				VAR StartDate =
-				    IF ( ISBLANK ( MinDate ), DATE ( 2026, 1, 1 ), DATE ( YEAR ( MinDate ), 1, 1 ) )
+				    IF (
+				        ISBLANK ( MinDate ),
+				        DATE ( 2026, 1, 1 ),
+				        DATE ( YEAR ( MinDate ), 1, 1 )
+				    )
 				VAR EndDate =
 				    IF (
 				        ISBLANK ( MaxDate ),
