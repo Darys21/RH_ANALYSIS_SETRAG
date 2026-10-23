@@ -1,1 +1,270 @@
-SEE_FILE
+table Fact_Inspection
+	lineageTag: 2f176e11-dc8e-46f1-bb36-6a2c6b4a7c69
+
+	measure 'Nombre d''anomalies' = COUNTROWS(Fact_Inspection)
+		formatString: 0
+		lineageTag: e5c1c1b0-acf7-47dc-97a5-c1fcfe0e746c
+
+	measure 'Stock en attente' = CALCULATE([Nombre d'anomalies], Fact_Inspection[Etat_Pilotage] = "En attente")
+		formatString: 0
+		lineageTag: a405ba0b-2227-4ece-a9d9-e5ee3abaed73
+
+	measure 'Anomalies en cours' = CALCULATE([Nombre d'anomalies], Fact_Inspection[Etat_Pilotage] = "En cours")
+		formatString: 0
+		lineageTag: 63292849-6d91-493e-b507-37bceef54c2d
+
+	measure 'Clôtures confirmées' = CALCULATE([Nombre d'anomalies], Fact_Inspection[Etat_Pilotage] = "Clôture confirmée")
+		formatString: 0
+		lineageTag: 9b2f601c-ffc1-4e3c-a42f-24f13df58697
+
+	measure 'Clôtures à vérifier' = CALCULATE([Nombre d'anomalies], Fact_Inspection[Etat_Pilotage] = "Clôture à vérifier")
+		formatString: 0
+		lineageTag: 215ee91d-557b-440b-a3a4-2963789a89d8
+
+	measure 'Taux de clôture confirmée' = DIVIDE([Clôtures confirmées], [Nombre d'anomalies], 0)
+		formatString: 0.0%
+		lineageTag: 712fd2d6-510f-4c2e-aa4d-4e10186d3c9e
+
+	measure 'Délai moyen de clôture (jours)' = AVERAGE(Fact_Inspection[Délai clôture (jours)])
+		formatString: #,##0.0
+		lineageTag: c40c005a-cab8-4aaa-882e-c8871fbcf41f
+
+	measure 'Stock ouvert' = [Stock en attente] + [Anomalies en cours]
+		formatString: 0
+		lineageTag: b044387a-89df-4ac5-9e7d-7acffa1de442
+
+	measure 'Anomalies en attente > 30 jours' =
+			CALCULATE(
+			    [Nombre d'anomalies],
+			    Fact_Inspection[Etat_Pilotage] = "En attente",
+			    FILTER(
+			        Fact_Inspection,
+			        NOT ISBLANK(Fact_Inspection[Date réception valide])
+			            && Fact_Inspection[Date réception valide] < TODAY() - 30
+			    )
+			)
+		formatString: 0
+		lineageTag: 9f3446b0-753b-48e3-8fba-ba2cf952d8be
+
+	measure 'Écarts à traiter' =
+			CALCULATE (
+			    [Nombre d'anomalies],
+			    NOT (
+			        CONTAINSSTRING ( LOWER ( COALESCE ( Fact_Inspection[Nom de l'écart], "" ) ), "r.a.s" )
+			            || CONTAINSSTRING ( LOWER ( COALESCE ( Fact_Inspection[Nom de l'écart], "" ) ), "visite" )
+			            || CONTAINSSTRING ( LOWER ( COALESCE ( Fact_Inspection[Nom de l'écart], "" ) ), "inspection réalisée" )
+			            || CONTAINSSTRING ( LOWER ( COALESCE ( Fact_Inspection[Nom de l'écart], "" ) ), "pas d'écart" )
+			            || CONTAINSSTRING ( LOWER ( COALESCE ( Fact_Inspection[Nom de l'écart], "" ) ), "aucun nouvel" )
+			            || Fact_Inspection[Famille action] = "RAS / Positif"
+			    )
+			)
+		formatString: 0
+		lineageTag: b1b1b1b1-c2c2-d3d3-e4e4-f5f5f5f5f5f5
+
+	measure 'Anomalies gravité forte' =
+			CALCULATE ( [Nombre d'anomalies], Fact_Inspection[Gravité] = "Forte" )
+		formatString: 0
+		lineageTag: e4e4e4e4-f5f5-a6a6-b7b7-c8c8c8c8c8c8
+
+	measure 'Délai max de clôture (jours)' = MAX ( Fact_Inspection[Délai clôture (jours)] )
+		formatString: 0
+		lineageTag: f5f5f5f5-a6a6-b7b7-c8c8-d9d9d9d9d9d9
+
+	column N°
+		dataType: int64
+		formatString: 0
+		lineageTag: 00141f81-f012-419c-b4c5-6d1e9735a9da
+		summarizeBy: sum
+		sourceColumn: N°
+
+	column 'Date de réception'
+		isHidden
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6cd67b34-b1c3-4d87-ba3a-6036c02dd647
+		summarizeBy: none
+		sourceColumn: Date de réception
+
+	column Thématique
+		dataType: string
+		lineageTag: f2db7421-e17e-4aef-836e-d73907ffa1ef
+		summarizeBy: none
+		sourceColumn: Thématique
+
+	column 'Nom de l''écart'
+		dataType: string
+		lineageTag: 3671824c-93e1-4305-beed-e1e32310c9bf
+		summarizeBy: none
+		sourceColumn: Nom de l'écart
+
+	column 'Détails de l''écart'
+		dataType: string
+		lineageTag: 20dd55c9-8849-4b3c-866a-91910f0872d4
+		summarizeBy: none
+		sourceColumn: Détails de l'écart
+
+	column 'Effets / Conséquences'
+		dataType: string
+		lineageTag: 23d74f8b-fa87-4d86-a4d6-197b393c88ca
+		summarizeBy: none
+		sourceColumn: Effets / Conséquences
+
+	column Lieu
+		dataType: string
+		lineageTag: b1ca972a-4867-43ac-b632-1f5f746b5799
+		summarizeBy: none
+		sourceColumn: Lieu
+
+	column 'Responsable de l''inspection'
+		dataType: string
+		lineageTag: 11e02755-765a-4906-8212-ecc6d0ad614d
+		summarizeBy: none
+		sourceColumn: Responsable de l'inspection
+
+	column 'Actions recommandées'
+		dataType: string
+		lineageTag: 87d4d220-cf1f-48bb-aabb-7d4a49f28105
+		summarizeBy: none
+		sourceColumn: Actions recommandées
+
+	column Responsable
+		dataType: string
+		lineageTag: 1d1fc486-5a30-47d2-bf0c-acfea24ae423
+		summarizeBy: none
+		sourceColumn: Responsable
+
+	column Gravité
+		dataType: string
+		lineageTag: 13959671-3a41-49a1-8229-e9d77efc2334
+		summarizeBy: none
+		sourceColumn: Gravité
+
+	column 'Taux de réalisation'
+		dataType: double
+		lineageTag: fd939c1b-c151-4c64-bdc6-afdd49df41c6
+		summarizeBy: sum
+		sourceColumn: Taux de réalisation
+
+	column Statut
+		dataType: string
+		lineageTag: 775c3f3f-5820-4224-8fcd-5ac00684508e
+		summarizeBy: none
+		sourceColumn: Statut
+
+	column 'Date de clôture'
+		isHidden
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 51c5ef84-bb0d-4f0b-b8dd-19294f5f2b0f
+		summarizeBy: none
+		sourceColumn: Date de clôture
+
+	column Commentaire
+		dataType: string
+		lineageTag: 2fe2658b-1e14-433f-aea1-02f6405ce943
+		summarizeBy: none
+		sourceColumn: Commentaire
+
+	column 'Document de référence'
+		isHidden
+		dataType: string
+		lineageTag: 15abd542-35df-4e7c-90ef-bab9595392c6
+		summarizeBy: none
+		sourceColumn: Document de référence
+
+	column 'Date réception source'
+		isHidden
+		dataType: string
+		lineageTag: 7ecdcf62-3f16-4897-b1bf-564e5bbdd34f
+		summarizeBy: none
+		sourceColumn: Date réception source
+
+	column 'Date clôture source'
+		isHidden
+		dataType: string
+		lineageTag: ac32575f-088e-4e88-b946-c184f986d91b
+		summarizeBy: none
+		sourceColumn: Date clôture source
+
+	column 'Qualité date réception'
+		isHidden
+		dataType: string
+		lineageTag: 0056fe05-0e84-47b3-8d7b-8046e2f98ba3
+		summarizeBy: none
+		sourceColumn: Qualité date réception
+
+	column 'Date réception valide'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6669e0de-a9ff-4026-befa-2f1354766655
+		summarizeBy: none
+		sourceColumn: Date réception valide
+
+	column 'Date clôture valide'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e445868f-5922-4df9-a308-5743a2c562dd
+		summarizeBy: none
+		sourceColumn: Date clôture valide
+
+	column 'Qualité date clôture'
+		isHidden
+		dataType: string
+		lineageTag: 78a40301-16e4-4bc4-84c3-301079f08f32
+		summarizeBy: none
+		sourceColumn: Qualité date clôture
+
+	column Etat_Pilotage
+		dataType: string
+		lineageTag: 80cee6c4-e49a-463b-93d4-24cead87fdee
+		summarizeBy: none
+		sourceColumn: Etat_Pilotage
+
+	column 'Délai clôture (jours)'
+		dataType: int64
+		formatString: 0
+		lineageTag: c3bbddfe-0b74-4539-bbc2-6a2850e272fb
+		summarizeBy: sum
+		sourceColumn: Délai clôture (jours)
+
+	column 'Contrôle délai'
+		isHidden
+		dataType: string
+		lineageTag: ec590b81-3387-41a8-99cd-e98868e207ea
+		summarizeBy: none
+		sourceColumn: Contrôle délai
+
+	column ID_Inspection
+		dataType: int64
+		formatString: 0
+		lineageTag: f51eecfb-bbc3-4fb0-810a-2aeb44088f38
+		summarizeBy: none
+		sourceColumn: ID_Inspection
+
+	column Inspecteur
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Inspecteur
+
+	column Zone
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Zone
+
+	column 'Famille action'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Famille action
+
+	partition Fact_Inspection = m
+		mode: import
+		source = ```
+				let
+				    Source = stg_Inspections_Source
+				in
+				    Source
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
