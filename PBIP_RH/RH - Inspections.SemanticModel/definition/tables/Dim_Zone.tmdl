@@ -11,43 +11,46 @@ table Dim_Zone
 
 		annotation SummarizationSetBy = User
 
-	column Ordre_Zone = ```
-			SWITCH (
-			    TRUE (),
-			    [Zone] = "Box 1", 1,
-			    [Zone] = "Box 2", 2,
-			    [Zone] = "Box 3", 3,
-			    [Zone] = "Boxes 1-2-3", 4,
-			    [Zone] = "Zone VIP", 5,
-			    [Zone] = "Cuisine VIP", 6,
-			    [Zone] = "Zone Mayo", 7,
-			    [Zone] = "Salle polyvalente", 8,
-			    [Zone] = "Salle de sport", 9,
-			    [Zone] = "Vestiaires", 10,
-			    [Zone] = "Locaux techniques", 11,
-			    [Zone] = "Bureaux", 12,
-			    [Zone] = "Plusieurs lieux", 13,
-			    [Zone] = "À qualifier", 99,
-			    50
-			)
-			```
+	column Ordre_Zone
 		dataType: int64
 		formatString: 0
 		lineageTag: 44444444-5555-6666-7777-888888888803
 		summarizeBy: none
+		sourceColumn: [Ordre_Zone]
 
 		annotation SummarizationSetBy = User
 
 	partition Dim_Zone = calculated
 		mode: import
 		source = ```
-				DISTINCT (
-				    SELECTCOLUMNS (
-				        FILTER (
-				            Fact_Inspection,
-				            NOT ISBLANK ( Fact_Inspection[Zone] )
-				        ),
-				        "Zone", Fact_Inspection[Zone]
-				    )
+				ADDCOLUMNS (
+				    DISTINCT (
+				        SELECTCOLUMNS (
+				            FILTER (
+				                Fact_Inspection,
+				                NOT ISBLANK ( Fact_Inspection[Zone] )
+				            ),
+				            "Zone", Fact_Inspection[Zone]
+				        )
+				    ),
+				    "Ordre_Zone",
+				        SWITCH (
+				            TRUE (),
+				            [Zone] = "Box 1", 1,
+				            [Zone] = "Box 2", 2,
+				            [Zone] = "Box 3", 3,
+				            [Zone] = "Boxes 1-2-3", 4,
+				            [Zone] = "Zone VIP", 5,
+				            [Zone] = "Cuisine VIP", 6,
+				            [Zone] = "Zone Mayo", 7,
+				            [Zone] = "Salle polyvalente", 8,
+				            [Zone] = "Salle de sport", 9,
+				            [Zone] = "Vestiaires", 10,
+				            [Zone] = "Locaux techniques", 11,
+				            [Zone] = "Bureaux", 12,
+				            [Zone] = "Plusieurs lieux", 13,
+				            [Zone] = "À qualifier", 99,
+				            50
+				        )
 				)
 				```

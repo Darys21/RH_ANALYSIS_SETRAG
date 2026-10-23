@@ -11,48 +11,52 @@ table Dim_Etat_Pilotage
 
 		annotation SummarizationSetBy = User
 
-	column Ordre_Etat = ```
-			SWITCH (
-			    TRUE (),
-			    [Etat_Pilotage] = "En attente", 1,
-			    [Etat_Pilotage] = "En cours", 2,
-			    [Etat_Pilotage] = "Clôture à vérifier", 3,
-			    [Etat_Pilotage] = "Clôture confirmée", 4,
-			    [Etat_Pilotage] = "À qualifier", 5,
-			    99
-			)
-			```
+	column Ordre_Etat
 		dataType: int64
 		formatString: 0
 		lineageTag: 33333333-4444-5555-6666-777777777703
 		summarizeBy: none
+		sourceColumn: [Ordre_Etat]
 
 		annotation SummarizationSetBy = User
 
-	column Groupe_Etat = ```
-			SWITCH (
-			    TRUE (),
-			    [Etat_Pilotage] IN { "En attente", "En cours" }, "Ouvert",
-			    [Etat_Pilotage] IN { "Clôture confirmée", "Clôture à vérifier" }, "Clôturé",
-			    "Autre"
-			)
-			```
+	column Groupe_Etat
 		dataType: string
 		lineageTag: 33333333-4444-5555-6666-777777777704
 		summarizeBy: none
+		sourceColumn: [Groupe_Etat]
 
 		annotation SummarizationSetBy = User
 
 	partition Dim_Etat_Pilotage = calculated
 		mode: import
 		source = ```
-				DISTINCT (
-				    SELECTCOLUMNS (
-				        FILTER (
-				            Fact_Inspection,
-				            NOT ISBLANK ( Fact_Inspection[Etat_Pilotage] )
+				ADDCOLUMNS (
+				    DISTINCT (
+				        SELECTCOLUMNS (
+				            FILTER (
+				                Fact_Inspection,
+				                NOT ISBLANK ( Fact_Inspection[Etat_Pilotage] )
+				            ),
+				            "Etat_Pilotage", Fact_Inspection[Etat_Pilotage]
+				        )
+				    ),
+				    "Ordre_Etat",
+				        SWITCH (
+				            TRUE (),
+				            [Etat_Pilotage] = "En attente", 1,
+				            [Etat_Pilotage] = "En cours", 2,
+				            [Etat_Pilotage] = "Clôture à vérifier", 3,
+				            [Etat_Pilotage] = "Clôture confirmée", 4,
+				            [Etat_Pilotage] = "À qualifier", 5,
+				            99
 				        ),
-				        "Etat_Pilotage", Fact_Inspection[Etat_Pilotage]
-				    )
+				    "Groupe_Etat",
+				        SWITCH (
+				            TRUE (),
+				            [Etat_Pilotage] IN { "En attente", "En cours" }, "Ouvert",
+				            [Etat_Pilotage] IN { "Clôture confirmée", "Clôture à vérifier" }, "Clôturé",
+				            "Autre"
+				        )
 				)
 				```

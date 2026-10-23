@@ -11,47 +11,51 @@ table Dim_Gravite
 
 		annotation SummarizationSetBy = User
 
-	column Ordre_Gravite = ```
-			SWITCH (
-			    TRUE (),
-			    [Gravite] = "Forte", 1,
-			    [Gravite] = "Moyen", 2,
-			    [Gravite] = "Faible", 3,
-			    99
-			)
-			```
+	column Ordre_Gravite
 		dataType: int64
 		formatString: 0
 		lineageTag: 22222222-3333-4444-5555-666666666603
 		summarizeBy: none
+		sourceColumn: [Ordre_Gravite]
 
 		annotation SummarizationSetBy = User
 
-	column Code_Couleur = ```
-			SWITCH (
-			    TRUE (),
-			    [Gravite] = "Forte", "#C00000",
-			    [Gravite] = "Moyen", "#ED7D31",
-			    [Gravite] = "Faible", "#70AD47",
-			    "#A6A6A6"
-			)
-			```
+	column Code_Couleur
 		dataType: string
 		lineageTag: 22222222-3333-4444-5555-666666666604
 		summarizeBy: none
+		sourceColumn: [Code_Couleur]
 
 		annotation SummarizationSetBy = User
 
 	partition Dim_Gravite = calculated
 		mode: import
 		source = ```
-				DISTINCT (
-				    SELECTCOLUMNS (
-				        FILTER (
-				            Fact_Inspection,
-				            NOT ISBLANK ( Fact_Inspection[Gravité] )
+				ADDCOLUMNS (
+				    DISTINCT (
+				        SELECTCOLUMNS (
+				            FILTER (
+				                Fact_Inspection,
+				                NOT ISBLANK ( Fact_Inspection[Gravité] )
+				            ),
+				            "Gravite", Fact_Inspection[Gravité]
+				        )
+				    ),
+				    "Ordre_Gravite",
+				        SWITCH (
+				            TRUE (),
+				            [Gravite] = "Forte", 1,
+				            [Gravite] = "Moyen", 2,
+				            [Gravite] = "Faible", 3,
+				            99
 				        ),
-				        "Gravite", Fact_Inspection[Gravité]
-				    )
+				    "Code_Couleur",
+				        SWITCH (
+				            TRUE (),
+				            [Gravite] = "Forte", "#C00000",
+				            [Gravite] = "Moyen", "#ED7D31",
+				            [Gravite] = "Faible", "#70AD47",
+				            "#A6A6A6"
+				        )
 				)
 				```
