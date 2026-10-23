@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "9b9cafc389d7051a1bff",
   "position": {
-    "x": 296.66666666666669,
-    "y": 668.33333333333337,
+    "x": 40,
+    "y": 680,
     "z": 4000,
-    "height": 345,
-    "width": 810,
+    "height": 360,
+    "width": 900,
     "tabOrder": 4000
   },
   "visual": {
@@ -42,12 +42,27 @@
                       "Entity": "Fact_Inspection"
                     }
                   },
-                  "Property": "Stock en attente"
+                  "Property": "Écarts à traiter"
                 }
               },
-              "queryRef": "Fact_Inspection.Stock en attente",
-              "nativeQueryRef": "En attente ",
-              "displayName": "En attente "
+              "queryRef": "Fact_Inspection.Écarts à traiter",
+              "nativeQueryRef": "Écarts à traiter",
+              "displayName": "Écarts à traiter"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Stock ouvert"
+                }
+              },
+              "queryRef": "Fact_Inspection.Stock ouvert",
+              "nativeQueryRef": "Stock ouvert",
+              "displayName": "Stock ouvert"
             },
             {
               "field": {
@@ -61,8 +76,8 @@
                 }
               },
               "queryRef": "Fact_Inspection.Clôtures confirmées",
-              "nativeQueryRef": "Clôturé",
-              "displayName": "Clôturé"
+              "nativeQueryRef": "Clôturés",
+              "displayName": "Clôturés"
             },
             {
               "field": {
@@ -72,76 +87,19 @@
                       "Entity": "Fact_Inspection"
                     }
                   },
-                  "Property": "Nombre d'anomalies"
+                  "Property": "Anomalies en attente > 30 jours"
                 }
               },
-              "queryRef": "Fact_Inspection.Nombre d'anomalies",
-              "nativeQueryRef": "Total",
-              "displayName": "Total"
+              "queryRef": "Fact_Inspection.Anomalies en attente > 30 jours",
+              "nativeQueryRef": "> 30 jours",
+              "displayName": "> 30 jours"
             }
           ]
         }
       }
     },
     "objects": {
-      "columnWidth": [
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "177.35876121818848D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "Fact_Inspection.Nombre d'anomalies"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "174.0654482547406D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "Fact_Inspection.Clôtures confirmées"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "202.66363580990804D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "Fact_Inspection.Stock en attente"
-          }
-        },
-        {
-          "properties": {
-            "value": {
-              "expr": {
-                "Literal": {
-                  "Value": "153.33333333333334D"
-                }
-              }
-            }
-          },
-          "selector": {
-            "metadata": "Fact_Inspection.Thématique"
-          }
-        }
-      ],
+      "columnWidth": [],
       "columnHeaders": [
         {
           "properties": {}
