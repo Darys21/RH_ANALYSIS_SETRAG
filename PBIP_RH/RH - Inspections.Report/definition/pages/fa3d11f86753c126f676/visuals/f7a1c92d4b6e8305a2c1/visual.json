@@ -1,0 +1,83 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "f7a1c92d4b6e8305a2c1",
+  "position": {
+    "x": 960,
+    "y": 680,
+    "z": 4500,
+    "height": 360,
+    "width": 920,
+    "tabOrder": 4500
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_Etat_Pilotage"
+                    }
+                  },
+                  "Property": "Etat_Pilotage"
+                }
+              },
+              "queryRef": "Dim_Etat_Pilotage.Etat_Pilotage",
+              "nativeQueryRef": "État de pilotage",
+              "active": true
+            }
+          ]
+        },
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_Gravite"
+                    }
+                  },
+                  "Property": "Gravite"
+                }
+              },
+              "queryRef": "Dim_Gravite.Gravite",
+              "nativeQueryRef": "Gravité",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Nombre d'anomalies"
+                }
+              },
+              "queryRef": "Fact_Inspection.Nombre d'anomalies",
+              "nativeQueryRef": "Nombre d'anomalies"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
