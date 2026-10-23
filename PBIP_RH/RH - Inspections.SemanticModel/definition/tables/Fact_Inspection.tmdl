@@ -775,6 +775,8 @@ table Fact_Inspection
 				    ),
 				
 				    // 12. Normalisation des responsables et inspecteurs
+				    // Si Lydie est associée à un autre nom, retirer Lydie et retenir l'autre responsable.
+				    // Sinon, retenir le premier nom cité. La valeur source reste inchangée.
 				    ResponsableNormalise = Table.TransformColumns(
 				        AvecID,
 				        {
@@ -783,16 +785,59 @@ table Fact_Inspection
 				                each
 				                    if _ is text then
 				                        let
-				                            R = Text.Trim(_)
+				                            R = Text.Trim(_),
+				                            Separes = Text.Replace(
+				                                Text.Replace(
+				                                    Text.Replace(
+				                                        Text.Replace(
+				                                            Text.Replace(R, " ET ", ","),
+				                                            " Et ",
+				                                            ","
+				                                        ),
+				                                        " et ",
+				                                        ","
+				                                    ),
+				                                    "+",
+				                                    ","
+				                                ),
+				                                "/",
+				                                ","
+				                            ),
+				                            Noms = List.Transform(
+				                                List.Select(
+				                                    Text.Split(Separes, ","),
+				                                    each Text.Trim(_) <> ""
+				                                ),
+				                                each Text.Trim(_)
+				                            ),
+				                            NomsSansLydie = List.Select(
+				                                Noms,
+				                                each Text.Lower(_) <> "lydie"
+				                            ),
+				                            ContientLydie = List.AnyTrue(
+				                                List.Transform(Noms, each Text.Lower(_) = "lydie")
+				                            ),
+				                            ResponsableChoisi =
+				                                if List.Count(Noms) = 0 then
+				                                    null
+				                                else if ContientLydie and List.Count(NomsSansLydie) > 0 then
+				                                    List.First(NomsSansLydie)
+				                                else
+				                                    List.First(Noms)
 				                        in
-				                            if Text.Upper(R) = "DCQI" then "DICQI" else R
+				                            if ResponsableChoisi = null then
+				                                null
+				                            else if Text.Upper(ResponsableChoisi) = "DCQI" then
+				                                "DICQI"
+				                            else
+				                                Text.Proper(ResponsableChoisi)
 				                    else
 				                        null,
 				                type nullable text
 				            }
-				        }
-				    ),
-				
+			        }
+			    ),
+
 				    // Inspecteur : premier nom saisi, casse harmonisée
 				    InspecteurNormalise = Table.AddColumn(
 				        ResponsableNormalise,
