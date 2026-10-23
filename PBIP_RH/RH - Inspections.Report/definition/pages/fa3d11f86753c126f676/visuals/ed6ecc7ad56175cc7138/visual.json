@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "ed6ecc7ad56175cc7138",
   "position": {
-    "x": 296.17021276595744,
-    "y": 121.09422492401215,
+    "x": 40,
+    "y": 90,
     "z": 0,
-    "height": 163.40425531914894,
-    "width": 1597.5683890577507,
+    "height": 140,
+    "width": 1840,
     "tabOrder": 0
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "Fact_Inspection"
                     }
                   },
-                  "Property": "Nombre d'anomalies"
+                  "Property": "Écarts à traiter"
                 }
               },
-              "queryRef": "Fact_Inspection.Nombre d'anomalies",
-              "nativeQueryRef": "Nombre d'anomalies"
+              "queryRef": "Fact_Inspection.Écarts à traiter",
+              "nativeQueryRef": "Écarts à traiter"
             },
             {
               "field": {
@@ -37,11 +37,11 @@
                       "Entity": "Fact_Inspection"
                     }
                   },
-                  "Property": "Stock en attente"
+                  "Property": "Stock ouvert"
                 }
               },
-              "queryRef": "Fact_Inspection.Stock en attente",
-              "nativeQueryRef": "Stock en attente"
+              "queryRef": "Fact_Inspection.Stock ouvert",
+              "nativeQueryRef": "Stock ouvert"
             },
             {
               "field": {
@@ -51,11 +51,11 @@
                       "Entity": "Fact_Inspection"
                     }
                   },
-                  "Property": "Anomalies en cours"
+                  "Property": "Taux de clôture confirmée"
                 }
               },
-              "queryRef": "Fact_Inspection.Anomalies en cours",
-              "nativeQueryRef": "Anomalies en cours"
+              "queryRef": "Fact_Inspection.Taux de clôture confirmée",
+              "nativeQueryRef": "Taux de clôture confirmée"
             },
             {
               "field": {
@@ -65,11 +65,39 @@
                       "Entity": "Fact_Inspection"
                     }
                   },
-                  "Property": "Clôtures confirmées"
+                  "Property": "Délai moyen de clôture (jours)"
                 }
               },
-              "queryRef": "Fact_Inspection.Clôtures confirmées",
-              "nativeQueryRef": "Clôtures confirmées"
+              "queryRef": "Fact_Inspection.Délai moyen de clôture (jours)",
+              "nativeQueryRef": "Délai moyen de clôture (jours)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Anomalies en attente > 30 jours"
+                }
+              },
+              "queryRef": "Fact_Inspection.Anomalies en attente > 30 jours",
+              "nativeQueryRef": "Anomalies en attente > 30 jours"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Anomalies gravité forte"
+                }
+              },
+              "queryRef": "Fact_Inspection.Anomalies gravité forte",
+              "nativeQueryRef": "Anomalies gravité forte"
             }
           ]
         }
@@ -84,7 +112,7 @@
                     "Entity": "Fact_Inspection"
                   }
                 },
-                "Property": "Nombre d'anomalies"
+                "Property": "Écarts à traiter"
               }
             },
             "direction": "Descending"
