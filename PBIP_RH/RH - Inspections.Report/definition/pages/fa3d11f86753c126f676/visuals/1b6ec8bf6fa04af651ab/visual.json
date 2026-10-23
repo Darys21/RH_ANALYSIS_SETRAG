@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Fact_Inspection"
+                      "Entity": "Dim_Zone"
                     }
                   },
                   "Property": "Zone"
                 }
               },
-              "queryRef": "Fact_Inspection.Zone",
+              "queryRef": "Dim_Zone.Zone",
               "nativeQueryRef": "Zone",
               "active": true
             }
