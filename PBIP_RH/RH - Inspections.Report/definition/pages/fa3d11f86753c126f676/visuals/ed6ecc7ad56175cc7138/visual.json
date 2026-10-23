@@ -98,6 +98,20 @@
               },
               "queryRef": "Fact_Inspection.Anomalies gravité forte",
               "nativeQueryRef": "Anomalies gravité forte"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Dates de clôture absentes"
+                }
+              },
+              "queryRef": "Fact_Inspection.Dates de clôture absentes",
+              "nativeQueryRef": "Dates de clôture absentes"
             }
           ]
         }
