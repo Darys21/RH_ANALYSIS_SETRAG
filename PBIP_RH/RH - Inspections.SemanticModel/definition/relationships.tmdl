@@ -64,3 +64,4 @@ relationship AutoDetected_b06df10a-3f6d-482b-9add-480aa6772425
 	fromCardinality: one
 	fromColumn: Fact_Inspection.ID_Inspection
 	toColumn: stg_Inspections_Source.ID_Inspection
+

@@ -3,11 +3,11 @@ table Dim_Etat_Pilotage
 
 	column Etat_Pilotage
 		dataType: string
+		isKey
 		lineageTag: 33333333-4444-5555-6666-777777777702
 		summarizeBy: none
-		isKey
-		sortByColumn: Ordre_Etat
 		sourceColumn: [Etat_Pilotage]
+		sortByColumn: Ordre_Etat
 
 		annotation SummarizationSetBy = User
 
@@ -30,7 +30,7 @@ table Dim_Etat_Pilotage
 
 	partition Dim_Etat_Pilotage = calculated
 		mode: import
-		source = ```
+		source =
 				ADDCOLUMNS (
 				    DISTINCT (
 				        SELECTCOLUMNS (
@@ -59,4 +59,4 @@ table Dim_Etat_Pilotage
 				            "Autre"
 				        )
 				)
-				```
+

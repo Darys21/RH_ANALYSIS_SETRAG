@@ -3,11 +3,11 @@ table Dim_Date
 
 	column Date
 		dataType: dateTime
+		isKey
 		formatString: Long Date
 		lineageTag: b2c3d4e5-f6a7-8901-bcde-f12345678901
 		dataCategory: Dates
 		summarizeBy: none
-		isKey
 		sourceColumn: [Date]
 
 		annotation SummarizationSetBy = User
@@ -119,7 +119,7 @@ table Dim_Date
 
 	partition Dim_Date = calculated
 		mode: import
-		source = ```
+		source =
 				VAR MinRecep =
 				    MIN ( Fact_Inspection[Date réception valide] )
 				VAR MaxRecep =
@@ -152,4 +152,4 @@ table Dim_Date
 				    )
 				RETURN
 				    CALENDAR ( StartDate, EndDate )
-				```
+

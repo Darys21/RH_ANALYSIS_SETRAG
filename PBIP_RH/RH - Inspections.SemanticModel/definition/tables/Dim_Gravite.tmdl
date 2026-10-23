@@ -3,11 +3,11 @@ table Dim_Gravite
 
 	column Gravite
 		dataType: string
+		isKey
 		lineageTag: 22222222-3333-4444-5555-666666666602
 		summarizeBy: none
-		isKey
-		sortByColumn: Ordre_Gravite
 		sourceColumn: [Gravite]
+		sortByColumn: Ordre_Gravite
 
 		annotation SummarizationSetBy = User
 
@@ -30,7 +30,7 @@ table Dim_Gravite
 
 	partition Dim_Gravite = calculated
 		mode: import
-		source = ```
+		source =
 				ADDCOLUMNS (
 				    DISTINCT (
 				        SELECTCOLUMNS (
@@ -58,4 +58,4 @@ table Dim_Gravite
 				            "#A6A6A6"
 				        )
 				)
-				```
+

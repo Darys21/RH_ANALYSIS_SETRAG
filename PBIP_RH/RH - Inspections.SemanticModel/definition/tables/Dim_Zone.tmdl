@@ -3,11 +3,11 @@ table Dim_Zone
 
 	column Zone
 		dataType: string
+		isKey
 		lineageTag: 44444444-5555-6666-7777-888888888802
 		summarizeBy: none
-		isKey
-		sortByColumn: Ordre_Zone
 		sourceColumn: [Zone]
+		sortByColumn: Ordre_Zone
 
 		annotation SummarizationSetBy = User
 
@@ -22,7 +22,7 @@ table Dim_Zone
 
 	partition Dim_Zone = calculated
 		mode: import
-		source = ```
+		source =
 				ADDCOLUMNS (
 				    DISTINCT (
 				        SELECTCOLUMNS (
@@ -53,4 +53,4 @@ table Dim_Zone
 				            50
 				        )
 				)
-				```
+

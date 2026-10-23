@@ -1,1 +1,95 @@
 cultureInfo fr-FR
+
+	linguisticMetadata =
+			{
+			  "Version": "2.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "fact_inspection.écarts_à_traiter": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Fact_Inspection",
+			          "ConceptualProperty": "Écarts à traiter"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Écarts à traiter": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_inspection.stock_ouvert": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Fact_Inspection",
+			          "ConceptualProperty": "Stock ouvert"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Stock ouvert": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_inspection.clôtures_confirmées": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Fact_Inspection",
+			          "ConceptualProperty": "Clôtures confirmées"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Clôturés": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_inspection.anomalies_en_attente__30_jours": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Fact_Inspection",
+			          "ConceptualProperty": "Anomalies en attente > 30 jours"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "> 30 jours": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

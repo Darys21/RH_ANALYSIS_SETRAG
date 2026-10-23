@@ -13,6 +13,25 @@
     "visualType": "pivotTable",
     "query": {
       "queryState": {
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Gravité"
+                }
+              },
+              "queryRef": "Fact_Inspection.Gravité",
+              "nativeQueryRef": "Gravité",
+              "active": true
+            }
+          ]
+        },
         "Rows": {
           "projections": [
             {
@@ -29,24 +48,6 @@
               "queryRef": "Fact_Inspection.Etat_Pilotage",
               "nativeQueryRef": "Etat_Pilotage",
               "active": true
-            }
-          ]
-        },
-        "Columns": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Fact_Inspection"
-                    }
-                  },
-                  "Property": "Gravité"
-                }
-              },
-              "queryRef": "Fact_Inspection.Gravité",
-              "nativeQueryRef": "Gravité"
             }
           ]
         },

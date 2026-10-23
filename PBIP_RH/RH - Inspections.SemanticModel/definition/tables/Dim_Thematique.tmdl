@@ -3,11 +3,11 @@ table Dim_Thematique
 
 	column Thematique
 		dataType: string
+		isKey
 		lineageTag: 11111111-2222-3333-4444-555555555502
 		summarizeBy: none
-		isKey
-		sortByColumn: Ordre_Thematique
 		sourceColumn: [Thematique]
+		sortByColumn: Ordre_Thematique
 
 		annotation SummarizationSetBy = User
 
@@ -22,7 +22,7 @@ table Dim_Thematique
 
 	partition Dim_Thematique = calculated
 		mode: import
-		source = ```
+		source =
 				ADDCOLUMNS (
 				    DISTINCT (
 				        SELECTCOLUMNS (
@@ -48,4 +48,4 @@ table Dim_Thematique
 				            99
 				        )
 				)
-				```
+
