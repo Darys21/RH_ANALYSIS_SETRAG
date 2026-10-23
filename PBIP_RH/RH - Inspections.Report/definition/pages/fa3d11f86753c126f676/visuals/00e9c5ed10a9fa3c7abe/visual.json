@@ -17,17 +17,17 @@
           "projections": [
             {
               "field": {
-                "Measure": {
+                "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Fact_Inspection"
+                      "Entity": "Dim_Etat_Pilotage"
                     }
                   },
-                  "Property": "Anomalies en attente > 30 jours"
+                  "Property": "Etat_Pilotage"
                 }
               },
-              "queryRef": "Fact_Inspection.Anomalies en attente > 30 jours",
-              "nativeQueryRef": "Anomalies en attente > 30 jours",
+              "queryRef": "Dim_Etat_Pilotage.Etat_Pilotage",
+              "nativeQueryRef": "Etat_Pilotage",
               "active": true
             }
           ]
@@ -42,39 +42,11 @@
                       "Entity": "Fact_Inspection"
                     }
                   },
-                  "Property": "Clôtures confirmées"
+                  "Property": "Nombre d'anomalies"
                 }
               },
-              "queryRef": "Fact_Inspection.Clôtures confirmées",
-              "nativeQueryRef": "Clôtures confirmées"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Fact_Inspection"
-                    }
-                  },
-                  "Property": "Anomalies en cours"
-                }
-              },
-              "queryRef": "Fact_Inspection.Anomalies en cours",
-              "nativeQueryRef": "Anomalies en cours"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Fact_Inspection"
-                    }
-                  },
-                  "Property": "Anomalies en attente > 30 jours"
-                }
-              },
-              "queryRef": "Fact_Inspection.Anomalies en attente > 30 jours",
-              "nativeQueryRef": "Anomalies en attente > 30 jours"
+              "queryRef": "Fact_Inspection.Nombre d'anomalies",
+              "nativeQueryRef": "Nombre d'anomalies"
             }
           ]
         }
