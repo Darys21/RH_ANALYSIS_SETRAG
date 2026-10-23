@@ -10,7 +10,7 @@
     "tabOrder": 1500
   },
   "visual": {
-    "visualType": "clusteredColumnChart",
+    "visualType": "columnChart",
     "query": {
       "queryState": {
         "Category": {
@@ -23,14 +23,17 @@
                       "Entity": "Dim_Date"
                     }
                   },
-                  "Property": "Annee_Mois"
+                  "Property": "Mois"
                 }
               },
-              "queryRef": "Dim_Date.Annee_Mois",
-              "nativeQueryRef": "Annee_Mois",
+              "queryRef": "Dim_Date.Mois",
+              "nativeQueryRef": "Mois",
               "active": true
             }
           ]
+        },
+        "Series": {
+          "projections": []
         },
         "Y": {
           "projections": [
@@ -50,24 +53,6 @@
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Dim_Date"
-                  }
-                },
-                "Property": "Annee_Mois"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
