@@ -50,6 +50,17 @@
           "type": "BaseTheme"
         }
       ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "idTy_Qptxu_logos_(1)24272180160191903.png",
+          "path": "idTy_Qptxu_logos_(1)24272180160191903.png",
+          "type": "Image"
+        }
+      ]
     }
   ],
   "settings": {

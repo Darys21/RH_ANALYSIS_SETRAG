@@ -463,503 +463,503 @@ table Fact_Inspection
 		mode: import
 		source = ```
 				let
-				    // 1. Source et normalisation des noms de colonnes
-				    Source = stg_Inspections_Source,
-				
-				    NomsColonnesNettoyes = Table.TransformColumnNames(
-				        Source,
-				        each
-				            Text.Trim(
-				                Text.Replace(
-				                    Text.Replace(
-				                        Text.Clean(_),
-				                        "’",
-				                        "'"
-				                    ),
-				                    Character.FromNumber(160),
-				                    " "
-				                )
-				            )
-				    ),
-				
-				    // 2. Colonnes attendues
-				    ColonnesAttendues = {
-				        "N°",
-				        "Date de réception",
-				        "Thématique",
-				        "Nom de l'écart",
-				        "Détails de l'écart",
-				        "Effets / Conséquences",
-				        "Lieu",
-				        "Responsable de l'inspection",
-				        "Actions recommandées",
-				        "Responsable",
-				        "Gravité",
-				        "Taux de réalisation",
-				        "Statut",
-				        "Date de clôture",
-				        "Commentaire",
-				        "Document de référence"
-				    },
-				
-				    // Ajouter les colonnes absentes pour éviter les erreurs de schéma
-				    ColonnesAjoutees = List.Accumulate(
-				        ColonnesAttendues,
-				        NomsColonnesNettoyes,
-				        (TableCourante, NomColonne) =>
-				            if Table.HasColumns(TableCourante, NomColonne) then
-				                TableCourante
-				            else
-				                Table.AddColumn(
-				                    TableCourante,
-				                    NomColonne,
-				                    each null
-				                )
-				    ),
-				
-				    // Supprimer les lignes entièrement vides
-				    LignesNonVides = Table.SelectRows(
-				        ColonnesAjoutees,
-				        each
-				            List.NonNullCount(
-				                List.Transform(
-				                    Record.FieldValues(_),
-				                    (Valeur) =>
-				                        if Valeur is text and Text.Trim(Valeur) = ""
-				                        then null
-				                        else Valeur
-				                )
-				            ) > 0
-				    ),
-				
-				    // 3. Conserver les dates brutes pour l'audit
-				    AvecDateReceptionSource = Table.AddColumn(
-				        LignesNonVides,
-				        "Date réception source",
-				        each
-				            try Text.From([Date de réception], "fr-FR")
-				            otherwise null,
-				        type text
-				    ),
-				
-				    AvecDateClotureSource = Table.AddColumn(
-				        AvecDateReceptionSource,
-				        "Date clôture source",
-				        each
-				            try Text.From([Date de clôture], "fr-FR")
-				            otherwise null,
-				        type text
-				    ),
-				
-				    // 4. Nettoyage des textes
-				    ColonnesTexte = {
-				        "Thématique",
-				        "Nom de l'écart",
-				        "Détails de l'écart",
-				        "Effets / Conséquences",
-				        "Lieu",
-				        "Responsable de l'inspection",
-				        "Actions recommandées",
-				        "Responsable",
-				        "Gravité",
-				        "Statut",
-				        "Commentaire",
-				        "Document de référence"
-				    },
-				
-				    TextesNettoyes = Table.TransformColumns(
-				        AvecDateClotureSource,
-				        List.Transform(
-				            ColonnesTexte,
-				            (NomColonne) => {
-				                NomColonne,
-				                each
-				                    if _ is text then
-				                        let
-				                            Texte = Text.Trim(Text.Clean(_))
-				                        in
-				                            if Texte = "" then null else Texte
-				                    else
-				                        _,
-				                type nullable text
-				            }
-				        )
-				    ),
-				
-				    // 5. Normalisation de la gravité et des statuts
-				    GraviteNormalisee = Table.TransformColumns(
-				        TextesNettoyes,
-				        {
-				            {
-				                "Gravité",
-				                each
-				                    if _ is text then Text.Proper(Text.Trim(_))
-				                    else null,
-				                type nullable text
-				            }
+					    // 1. Source et normalisation des noms de colonnes
+					    Source = stg_Inspections_Source,
+					
+					    NomsColonnesNettoyes = Table.TransformColumnNames(
+					        Source,
+					        each
+					            Text.Trim(
+					                Text.Replace(
+					                    Text.Replace(
+					                        Text.Clean(_),
+					                        "’",
+					                        "'"
+					                    ),
+					                    Character.FromNumber(160),
+					                    " "
+					                )
+					            )
+					    ),
+					
+					    // 2. Colonnes attendues
+					    ColonnesAttendues = {
+					        "N°",
+					        "Date de réception",
+					        "Thématique",
+					        "Nom de l'écart",
+					        "Détails de l'écart",
+					        "Effets / Conséquences",
+					        "Lieu",
+					        "Responsable de l'inspection",
+					        "Actions recommandées",
+					        "Responsable",
+					        "Gravité",
+					        "Taux de réalisation",
+					        "Statut",
+					        "Date de clôture",
+					        "Commentaire",
+					        "Document de référence"
+					    },
+					
+					    // Ajouter les colonnes absentes pour éviter les erreurs de schéma
+					    ColonnesAjoutees = List.Accumulate(
+					        ColonnesAttendues,
+					        NomsColonnesNettoyes,
+					        (TableCourante, NomColonne) =>
+					            if Table.HasColumns(TableCourante, NomColonne) then
+					                TableCourante
+					            else
+					                Table.AddColumn(
+					                    TableCourante,
+					                    NomColonne,
+					                    each null
+					                )
+					    ),
+					
+					    // Supprimer les lignes entièrement vides
+					    LignesNonVides = Table.SelectRows(
+					        ColonnesAjoutees,
+					        each
+					            List.NonNullCount(
+					                List.Transform(
+					                    Record.FieldValues(_),
+					                    (Valeur) =>
+					                        if Valeur is text and Text.Trim(Valeur) = ""
+					                        then null
+					                        else Valeur
+					                )
+					            ) > 0
+					    ),
+					
+					    // 3. Conserver les dates brutes pour l'audit
+					    AvecDateReceptionSource = Table.AddColumn(
+					        LignesNonVides,
+					        "Date réception source",
+					        each
+					            try Text.From([Date de réception], "fr-FR")
+					            otherwise null,
+					        type text
+					    ),
+					
+					    AvecDateClotureSource = Table.AddColumn(
+					        AvecDateReceptionSource,
+					        "Date clôture source",
+					        each
+					            try Text.From([Date de clôture], "fr-FR")
+					            otherwise null,
+					        type text
+					    ),
+					
+					    // 4. Nettoyage des textes
+					    ColonnesTexte = {
+					        "Thématique",
+					        "Nom de l'écart",
+					        "Détails de l'écart",
+					        "Effets / Conséquences",
+					        "Lieu",
+					        "Responsable de l'inspection",
+					        "Actions recommandées",
+					        "Responsable",
+					        "Gravité",
+					        "Statut",
+					        "Commentaire",
+					        "Document de référence"
+					    },
+					
+					    TextesNettoyes = Table.TransformColumns(
+					        AvecDateClotureSource,
+					        List.Transform(
+					            ColonnesTexte,
+					            (NomColonne) => {
+					                NomColonne,
+					                each
+					                    if _ is text then
+					                        let
+					                            Texte = Text.Trim(Text.Clean(_))
+					                        in
+					                            if Texte = "" then null else Texte
+					                    else
+					                        _,
+					                type nullable text
+					            }
+					        )
+					    ),
+					
+					    // 5. Normalisation de la gravité et des statuts
+					    GraviteNormalisee = Table.TransformColumns(
+					        TextesNettoyes,
+					        {
+					            {
+					                "Gravité",
+					                each
+					                    if _ is text then Text.Proper(Text.Trim(_))
+					                    else null,
+					                type nullable text
+					            }
+					        }
+					    ),
+					
+					    StatutNormalise = Table.TransformColumns(
+					        GraviteNormalisee,
+					        {
+					            {
+					                "Statut",
+					                each
+					                    if _ is text then
+					                        let
+					                            S = Text.Trim(_),
+					                            S2 = Text.Replace(S, "–", "-")
+					                        in
+					                            if Text.Lower(S2) = "en attente" then "En attente"
+					                            else if Text.Lower(S2) = "en cours" then "En cours"
+					                            else if Text.Lower(S2) = "clôturé" then "Clôturé"
+					                            else if Text.Lower(S2) = "clôturé - date à confirmer"
+					                                then "Clôturé - date à confirmer"
+					                            else S2
+					                    else
+					                        null,
+					                type nullable text
+					            }
+					        }
+					    ),
+					
+					    // 6. Conversion sécurisée des dates et valeurs numériques
+					    TypesCorriges = Table.TransformColumns(
+					        StatutNormalise,
+					        {
+					            {
+					                "N°",
+					                each try Int64.From(_) otherwise null,
+					                Int64.Type
+					            },
+					            {
+					                "Date de réception",
+					                each try Date.From(_, "fr-FR") otherwise null,
+					                type nullable date
+					            },
+					            {
+					                "Date de clôture",
+					                each try Date.From(_, "fr-FR") otherwise null,
+					                type nullable date
+					            },
+					            {
+					                "Taux de réalisation",
+					                each try Number.From(_, "fr-FR") otherwise null,
+					                type nullable number
+					            }
+					        }
+					    ),
+					
+					    // 7. Contrôle de la date de réception
+					    
+					    // Supprimer l'ancienne colonne si elle existe,
+					    // puis recalculer sa valeur à partir de la date source
+					    AncienneQualiteReceptionSupprimee =
+					        if Table.HasColumns(TypesCorriges, "Qualité date réception") then
+					            Table.RemoveColumns(TypesCorriges, {"Qualité date réception"})
+					        else
+					            TypesCorriges,
+					
+					    QualiteReception = Table.AddColumn(
+					        AncienneQualiteReceptionSupprimee,
+					        "Qualité date réception",
+					        each
+					            if [Date de réception] = null
+					                or [Date de réception] = #date(1900, 1, 1)
+					            then "À vérifier"
+					            else "OK",
+					        type text
+					    ),
+					
+					    ReceptionValide = Table.AddColumn(
+					    QualiteReception,
+					    "Date réception valide",
+					    each
+					        if [Qualité date réception] = "OK"
+					        then [Date de réception]
+					        else null,
+					    type nullable date
+					    ),
+					
+					    // 8. Contrôle de la date de clôture
+					    ClotureValide = Table.AddColumn(
+					        ReceptionValide,
+					        "Date clôture valide",
+					        each
+					            if [Date de clôture] = null
+					                or [Date de clôture] = #date(1900, 1, 1)
+					            then null
+					            else [Date de clôture],
+					        type nullable date
+					    ),
+					
+					    QualiteCloture = Table.AddColumn(
+					        ClotureValide,
+					        "Qualité date clôture",
+					        each
+					            if [Date clôture source] = null
+					                or Text.Trim([Date clôture source]) = ""
+					                or Text.Lower(Text.Trim([Date clôture source])) = "null"
+					            then "Absente"
+					            else if [Date clôture valide] = null then "À vérifier"
+					            else if [Date réception valide] <> null
+					                and [Date clôture valide] < [Date réception valide]
+					            then "À vérifier"
+					            else if [Statut] = "En attente"
+					                or [Statut] = "En cours"
+					            then "À vérifier"
+					            else "OK",
+					        type text
+					    ),
+					
+					    // 9. Classification opérationnelle
+					    EtatPilotage = Table.AddColumn(
+					        QualiteCloture,
+					        "Etat_Pilotage",
+					        each
+					            if [Statut] = "En attente" then "En attente"
+					            else if [Statut] = "En cours" then "En cours"
+					            else if [Statut] = "Clôturé"
+					                and [Qualité date clôture] = "OK"
+					            then "Clôture confirmée"
+					            else if [Statut] = "Clôturé"
+					                or [Statut] = "Clôturé - date à confirmer"
+					            then "Clôture à vérifier"
+					            else "À qualifier",
+					        type text
+					    ),
+					
+					    // 10. Calcul du délai de clôture
+					    DelaiCloture = Table.AddColumn(
+					        EtatPilotage,
+					        "Délai clôture (jours)",
+					        each
+					            if [Etat_Pilotage] = "Clôture confirmée"
+					                and [Date réception valide] <> null
+					                and [Date clôture valide] <> null
+					                and [Date clôture valide] >= [Date réception valide]
+					            then Duration.Days(
+					                [Date clôture valide] - [Date réception valide]
+					            )
+					            else null,
+					        Int64.Type
+					    ),
+					
+					    ControleDelai = Table.AddColumn(
+					        DelaiCloture,
+					        "Contrôle délai",
+					        each
+					            if [Date réception valide] = null
+					                or [Date clôture valide] = null
+					            then "Date manquante"
+					            else if [Date clôture valide] < [Date réception valide]
+					            then "Incohérence chronologique"
+					            else "OK",
+					        type text
+					    ),
+					
+					    // 11. Identifiant technique unique, indépendant du N° source
+					    AncienIDSupprime =
+					        if Table.HasColumns(ControleDelai, "ID_Inspection") then
+					            Table.RemoveColumns(ControleDelai, {"ID_Inspection"})
+					        else
+					            ControleDelai,
+					
+					    AvecID = Table.AddIndexColumn(
+					        AncienIDSupprime,
+					        "ID_Inspection",
+					        1,
+					        1,
+					        Int64.Type
+					    ),
+					
+					    // 12. Normalisation des responsables et inspecteurs
+					    // Si Lydie est associée à un autre nom, retirer Lydie et retenir l'autre responsable.
+					    // Sinon, retenir le premier nom cité. La valeur source reste inchangée.
+					    ResponsableNormalise = Table.TransformColumns(
+					        AvecID,
+					        {
+					            {
+					                "Responsable",
+					                each
+					                    if _ is text then
+					                        let
+					                            R = Text.Trim(_),
+					                            Separes = Text.Replace(
+					                                Text.Replace(
+					                                    Text.Replace(
+					                                        Text.Replace(
+					                                            Text.Replace(R, " ET ", ","),
+					                                            " Et ",
+					                                            ","
+					                                        ),
+					                                        " et ",
+					                                        ","
+					                                    ),
+					                                    "+",
+					                                    ","
+					                                ),
+					                                "/",
+					                                ","
+					                            ),
+					                            Noms = List.Transform(
+					                                List.Select(
+					                                    Text.Split(Separes, ","),
+					                                    each Text.Trim(_) <> ""
+					                                ),
+					                                each Text.Trim(_)
+					                            ),
+					                            NomsSansLydie = List.Select(
+					                                Noms,
+					                                each Text.Lower(_) <> "lydie"
+					                            ),
+					                            ContientLydie = List.AnyTrue(
+					                                List.Transform(Noms, each Text.Lower(_) = "lydie")
+					                            ),
+					                            ResponsableChoisi =
+					                                if List.Count(Noms) = 0 then
+					                                    null
+					                                else if ContientLydie and List.Count(NomsSansLydie) > 0 then
+					                                    List.First(NomsSansLydie)
+					                                else
+					                                    List.First(Noms)
+					                        in
+					                            if ResponsableChoisi = null then
+					                                null
+					                            else if Text.Upper(ResponsableChoisi) = "DCQI" then
+					                                "DICQI"
+					                            else
+					                                Text.Proper(ResponsableChoisi)
+					                    else
+					                        null,
+					                type nullable text
+					            }
 				        }
 				    ),
 				
-				    StatutNormalise = Table.TransformColumns(
-				        GraviteNormalisee,
-				        {
-				            {
-				                "Statut",
-				                each
-				                    if _ is text then
-				                        let
-				                            S = Text.Trim(_),
-				                            S2 = Text.Replace(S, "–", "-")
-				                        in
-				                            if Text.Lower(S2) = "en attente" then "En attente"
-				                            else if Text.Lower(S2) = "en cours" then "En cours"
-				                            else if Text.Lower(S2) = "clôturé" then "Clôturé"
-				                            else if Text.Lower(S2) = "clôturé - date à confirmer"
-				                                then "Clôturé - date à confirmer"
-				                            else S2
-				                    else
-				                        null,
-				                type nullable text
-				            }
-				        }
-				    ),
-				
-				    // 6. Conversion sécurisée des dates et valeurs numériques
-				    TypesCorriges = Table.TransformColumns(
-				        StatutNormalise,
-				        {
-				            {
-				                "N°",
-				                each try Int64.From(_) otherwise null,
-				                Int64.Type
-				            },
-				            {
-				                "Date de réception",
-				                each try Date.From(_, "fr-FR") otherwise null,
-				                type nullable date
-				            },
-				            {
-				                "Date de clôture",
-				                each try Date.From(_, "fr-FR") otherwise null,
-				                type nullable date
-				            },
-				            {
-				                "Taux de réalisation",
-				                each try Number.From(_, "fr-FR") otherwise null,
-				                type nullable number
-				            }
-				        }
-				    ),
-				
-				    // 7. Contrôle de la date de réception
-				    
-				    // Supprimer l'ancienne colonne si elle existe,
-				    // puis recalculer sa valeur à partir de la date source
-				    AncienneQualiteReceptionSupprimee =
-				        if Table.HasColumns(TypesCorriges, "Qualité date réception") then
-				            Table.RemoveColumns(TypesCorriges, {"Qualité date réception"})
-				        else
-				            TypesCorriges,
-				
-				    QualiteReception = Table.AddColumn(
-				        AncienneQualiteReceptionSupprimee,
-				        "Qualité date réception",
-				        each
-				            if [Date de réception] = null
-				                or [Date de réception] = #date(1900, 1, 1)
-				            then "À vérifier"
-				            else "OK",
-				        type text
-				    ),
-				
-				    ReceptionValide = Table.AddColumn(
-				    QualiteReception,
-				    "Date réception valide",
-				    each
-				        if [Qualité date réception] = "OK"
-				        then [Date de réception]
-				        else null,
-				    type nullable date
-				    ),
-				
-				    // 8. Contrôle de la date de clôture
-				    ClotureValide = Table.AddColumn(
-				        ReceptionValide,
-				        "Date clôture valide",
-				        each
-				            if [Date de clôture] = null
-				                or [Date de clôture] = #date(1900, 1, 1)
-				            then null
-				            else [Date de clôture],
-				        type nullable date
-				    ),
-				
-				    QualiteCloture = Table.AddColumn(
-				        ClotureValide,
-				        "Qualité date clôture",
-				        each
-				            if [Date clôture source] = null
-				                or Text.Trim([Date clôture source]) = ""
-				                or Text.Lower(Text.Trim([Date clôture source])) = "null"
-				            then "Absente"
-				            else if [Date clôture valide] = null then "À vérifier"
-				            else if [Date réception valide] <> null
-				                and [Date clôture valide] < [Date réception valide]
-				            then "À vérifier"
-				            else if [Statut] = "En attente"
-				                or [Statut] = "En cours"
-				            then "À vérifier"
-				            else "OK",
-				        type text
-				    ),
-				
-				    // 9. Classification opérationnelle
-				    EtatPilotage = Table.AddColumn(
-				        QualiteCloture,
-				        "Etat_Pilotage",
-				        each
-				            if [Statut] = "En attente" then "En attente"
-				            else if [Statut] = "En cours" then "En cours"
-				            else if [Statut] = "Clôturé"
-				                and [Qualité date clôture] = "OK"
-				            then "Clôture confirmée"
-				            else if [Statut] = "Clôturé"
-				                or [Statut] = "Clôturé - date à confirmer"
-				            then "Clôture à vérifier"
-				            else "À qualifier",
-				        type text
-				    ),
-				
-				    // 10. Calcul du délai de clôture
-				    DelaiCloture = Table.AddColumn(
-				        EtatPilotage,
-				        "Délai clôture (jours)",
-				        each
-				            if [Etat_Pilotage] = "Clôture confirmée"
-				                and [Date réception valide] <> null
-				                and [Date clôture valide] <> null
-				                and [Date clôture valide] >= [Date réception valide]
-				            then Duration.Days(
-				                [Date clôture valide] - [Date réception valide]
-				            )
-				            else null,
-				        Int64.Type
-				    ),
-				
-				    ControleDelai = Table.AddColumn(
-				        DelaiCloture,
-				        "Contrôle délai",
-				        each
-				            if [Date réception valide] = null
-				                or [Date clôture valide] = null
-				            then "Date manquante"
-				            else if [Date clôture valide] < [Date réception valide]
-				            then "Incohérence chronologique"
-				            else "OK",
-				        type text
-				    ),
-				
-				    // 11. Identifiant technique unique, indépendant du N° source
-				    AncienIDSupprime =
-				        if Table.HasColumns(ControleDelai, "ID_Inspection") then
-				            Table.RemoveColumns(ControleDelai, {"ID_Inspection"})
-				        else
-				            ControleDelai,
-				
-				    AvecID = Table.AddIndexColumn(
-				        AncienIDSupprime,
-				        "ID_Inspection",
-				        1,
-				        1,
-				        Int64.Type
-				    ),
-				
-				    // 12. Normalisation des responsables et inspecteurs
-				    // Si Lydie est associée à un autre nom, retirer Lydie et retenir l'autre responsable.
-				    // Sinon, retenir le premier nom cité. La valeur source reste inchangée.
-				    ResponsableNormalise = Table.TransformColumns(
-				        AvecID,
-				        {
-				            {
-				                "Responsable",
-				                each
-				                    if _ is text then
-				                        let
-				                            R = Text.Trim(_),
-				                            Separes = Text.Replace(
-				                                Text.Replace(
-				                                    Text.Replace(
-				                                        Text.Replace(
-				                                            Text.Replace(R, " ET ", ","),
-				                                            " Et ",
-				                                            ","
-				                                        ),
-				                                        " et ",
-				                                        ","
-				                                    ),
-				                                    "+",
-				                                    ","
-				                                ),
-				                                "/",
-				                                ","
-				                            ),
-				                            Noms = List.Transform(
-				                                List.Select(
-				                                    Text.Split(Separes, ","),
-				                                    each Text.Trim(_) <> ""
-				                                ),
-				                                each Text.Trim(_)
-				                            ),
-				                            NomsSansLydie = List.Select(
-				                                Noms,
-				                                each Text.Lower(_) <> "lydie"
-				                            ),
-				                            ContientLydie = List.AnyTrue(
-				                                List.Transform(Noms, each Text.Lower(_) = "lydie")
-				                            ),
-				                            ResponsableChoisi =
-				                                if List.Count(Noms) = 0 then
-				                                    null
-				                                else if ContientLydie and List.Count(NomsSansLydie) > 0 then
-				                                    List.First(NomsSansLydie)
-				                                else
-				                                    List.First(Noms)
-				                        in
-				                            if ResponsableChoisi = null then
-				                                null
-				                            else if Text.Upper(ResponsableChoisi) = "DCQI" then
-				                                "DICQI"
-				                            else
-				                                Text.Proper(ResponsableChoisi)
-				                    else
-				                        null,
-				                type nullable text
-				            }
-			        }
-			    ),
-
-				    // Inspecteur : premier nom saisi, casse harmonisée
-				    InspecteurNormalise = Table.AddColumn(
-				        ResponsableNormalise,
-				        "Inspecteur",
-				        each
-				    if [#"Responsable de l'inspection"] = null then
-				                null
-				            else
-				                let
-				                    Brut = [#"Responsable de l'inspection"],
-				                    Separes = Text.Replace(
-				                        Text.Replace(
-				                            Text.Replace(
-				                                Text.Replace(
-				                                    Text.Replace(Brut, " ET ", ","),
-				                                    " Et ",
-				                                    ","
-				                                ),
-				                                " et ",
-				                                ","
-				                            ),
-				                            "+",
-				                            ","
-				                        ),
-				                        "/",
-				                        ","
-				                    ),
-				                    Premier = List.First(
-				                        List.Select(
-				                            Text.Split(Separes, ","),
-				                            each Text.Trim(_) <> ""
-				                        )
-				                    )
-				                in
-				                    if Premier = null then null else Text.Proper(Text.Trim(Premier)),
-				        type nullable text
-				    ),
-				
-				    // 13. Rattachement au site (périmètre de la revue)
-				    Zone = Table.AddColumn(
-				        InspecteurNormalise,
-				        "Zone",
-				        each
-				            if [Lieu] = null then
-				                "À qualifier"
-				            else
-				                let
-				                    X = Text.Lower(
-				                        Text.Remove(Text.Trim([Lieu]), {" ", "-", "_", "(", ")"})
-				                    )
-				                in
-				                    if Text.Contains(X, "pasbienaliment") then
-				                        "À qualifier"
-				                    else if Text.Contains(X, "1,2") then
-				                        "Boxes 1-2-3"
-				                    else if Text.Contains(X, "tous") then
-				                        "Boxes 1-2-3"
-				                    else if Text.Contains(X, "box2") then
-				                        "Box 2"
-				                    else if Text.Contains(X, "box3") then
-				                        "Box 3"
-				                    else if Text.Contains(X, "box1") then
-				                        "Box 1"
-				                    else if Text.Contains(X, "/") then
-				                        "Plusieurs lieux"
-				                    else if Text.Contains(X, "cuisin") and Text.Contains(X, "vip") then
-				                        "Cuisine VIP"
-				                    else if Text.Contains(X, "vestiaire") or Text.Contains(X, "vestiare") then
-				                        "Vestiaires"
-				                    else if Text.Contains(X, "vip") then
-				                        "Zone VIP"
-				                    else if Text.Contains(X, "local") or Text.Contains(X, "machine") or Text.Contains(X, "destatamis") then
-				                        "Locaux techniques"
-				                    else if Text.Contains(X, "mayo") or Text.Contains(X, "restaurant") then
-				                        "Zone Mayo"
-				                    else if Text.Contains(X, "polyvalente") then
-				                        "Salle polyvalente"
-				                    else if Text.Contains(X, "bureau") then
-				                        "Bureaux"
-				                    else if Text.Contains(X, "sport") then
-				                        "Salle de sport"
-				                    else if Text.Contains(X, "cuisine") then
-				                        "Cuisines"
-				                    else
-				                        "À qualifier",
-				        type text
-				    ),
-				
-				    // 14. Famille d'action recommandée
-				    FamilleAction = Table.AddColumn(
-				        Zone,
-				        "Famille action",
-				        each
-				            if [Actions recommandées] = null then
-				                "Non renseigné"
-				            else
-				                let
-				                    X = Text.Lower(Text.Trim([Actions recommandées]))
-				                in
-				                    if Text.Contains(X, "r.a.s") or Text.Contains(X, "felicit") then
-				                        "RAS / Positif"
-				                    else if Text.Contains(X, "attente") or Text.Contains(X, "travaux") or Text.Contains(X, "suivi") then
-				                        "En attente des travaux"
-				                    else if Text.Contains(X, "install") then
-				                        "Installer"
-				                    else if Text.Contains(X, "debauch") or Text.Contains(X, "débauch") then
-				                        "Déboucher"
-				                    else if Text.Contains(X, "nettoy") or Text.Contains(X, "vider") or Text.Contains(X, "vidange") then
-				                        "Nettoyer / Vider"
-				                    else if Text.Contains(X, "fix") or Text.Contains(X, "resser") or Text.Contains(X, "raccord") or Text.Contains(X, "rebouch") or Text.Contains(X, "rabot") then
-				                        "Fixer / Resserrer"
-				                    else if Text.Contains(X, "repar") or Text.Contains(X, "répar") then
-				                        "Réparer"
-				                    else if Text.Contains(X, "remplac") or Text.Contains(X, "changer") or Text.Contains(X, "changement") then
-				                        "Remplacer / Changer"
-				                    else
-				                        "Autre",
-				        type text
-				    )
-				
-				in
-				    FamilleAction
+					    // Inspecteur : premier nom saisi, casse harmonisée
+					    InspecteurNormalise = Table.AddColumn(
+					        ResponsableNormalise,
+					        "Inspecteur",
+					        each
+					    if [#"Responsable de l'inspection"] = null then
+					                null
+					            else
+					                let
+					                    Brut = [#"Responsable de l'inspection"],
+					                    Separes = Text.Replace(
+					                        Text.Replace(
+					                            Text.Replace(
+					                                Text.Replace(
+					                                    Text.Replace(Brut, " ET ", ","),
+					                                    " Et ",
+					                                    ","
+					                                ),
+					                                " et ",
+					                                ","
+					                            ),
+					                            "+",
+					                            ","
+					                        ),
+					                        "/",
+					                        ","
+					                    ),
+					                    Premier = List.First(
+					                        List.Select(
+					                            Text.Split(Separes, ","),
+					                            each Text.Trim(_) <> ""
+					                        )
+					                    )
+					                in
+					                    if Premier = null then null else Text.Proper(Text.Trim(Premier)),
+					        type nullable text
+					    ),
+					
+					    // 13. Rattachement au site (périmètre de la revue)
+					    Zone = Table.AddColumn(
+					        InspecteurNormalise,
+					        "Zone",
+					        each
+					            if [Lieu] = null then
+					                "À qualifier"
+					            else
+					                let
+					                    X = Text.Lower(
+					                        Text.Remove(Text.Trim([Lieu]), {" ", "-", "_", "(", ")"})
+					                    )
+					                in
+					                    if Text.Contains(X, "pasbienaliment") then
+					                        "À qualifier"
+					                    else if Text.Contains(X, "1,2") then
+					                        "Boxes 1-2-3"
+					                    else if Text.Contains(X, "tous") then
+					                        "Boxes 1-2-3"
+					                    else if Text.Contains(X, "box2") then
+					                        "Box 2"
+					                    else if Text.Contains(X, "box3") then
+					                        "Box 3"
+					                    else if Text.Contains(X, "box1") then
+					                        "Box 1"
+					                    else if Text.Contains(X, "/") then
+					                        "Plusieurs lieux"
+					                    else if Text.Contains(X, "cuisin") and Text.Contains(X, "vip") then
+					                        "Cuisine VIP"
+					                    else if Text.Contains(X, "vestiaire") or Text.Contains(X, "vestiare") then
+					                        "Vestiaires"
+					                    else if Text.Contains(X, "vip") then
+					                        "Zone VIP"
+					                    else if Text.Contains(X, "local") or Text.Contains(X, "machine") or Text.Contains(X, "destatamis") then
+					                        "Locaux techniques"
+					                    else if Text.Contains(X, "mayo") or Text.Contains(X, "restaurant") then
+					                        "Zone Mayo"
+					                    else if Text.Contains(X, "polyvalente") then
+					                        "Salle polyvalente"
+					                    else if Text.Contains(X, "bureau") then
+					                        "Bureaux"
+					                    else if Text.Contains(X, "sport") then
+					                        "Salle de sport"
+					                    else if Text.Contains(X, "cuisine") then
+					                        "Cuisines"
+					                    else
+					                        "À qualifier",
+					        type text
+					    ),
+					
+					    // 14. Famille d'action recommandée
+					    FamilleAction = Table.AddColumn(
+					        Zone,
+					        "Famille action",
+					        each
+					            if [Actions recommandées] = null then
+					                "Non renseigné"
+					            else
+					                let
+					                    X = Text.Lower(Text.Trim([Actions recommandées]))
+					                in
+					                    if Text.Contains(X, "r.a.s") or Text.Contains(X, "felicit") then
+					                        "RAS / Positif"
+					                    else if Text.Contains(X, "attente") or Text.Contains(X, "travaux") or Text.Contains(X, "suivi") then
+					                        "En attente des travaux"
+					                    else if Text.Contains(X, "install") then
+					                        "Installer"
+					                    else if Text.Contains(X, "debauch") or Text.Contains(X, "débauch") then
+					                        "Déboucher"
+					                    else if Text.Contains(X, "nettoy") or Text.Contains(X, "vider") or Text.Contains(X, "vidange") then
+					                        "Nettoyer / Vider"
+					                    else if Text.Contains(X, "fix") or Text.Contains(X, "resser") or Text.Contains(X, "raccord") or Text.Contains(X, "rebouch") or Text.Contains(X, "rabot") then
+					                        "Fixer / Resserrer"
+					                    else if Text.Contains(X, "repar") or Text.Contains(X, "répar") then
+					                        "Réparer"
+					                    else if Text.Contains(X, "remplac") or Text.Contains(X, "changer") or Text.Contains(X, "changement") then
+					                        "Remplacer / Changer"
+					                    else
+					                        "Autre",
+					        type text
+					    )
+					
+					in
+					    FamilleAction
 				```
 
 	annotation PBI_NavigationStepName = Navigation
