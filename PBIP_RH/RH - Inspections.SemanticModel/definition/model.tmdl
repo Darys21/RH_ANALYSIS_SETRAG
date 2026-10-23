@@ -1,0 +1,31 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: fr-FR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["stg_Inspections_Source","Fact_Inspection"]
+
+annotation PBI_ProTooling = ["MCP-PBIModeling","DevMode","TMDL-Extension"]
+
+ref table stg_Inspections_Source
+ref table Fact_Inspection
+ref table Dim_Date
+ref table Dim_Thematique
+ref table Dim_Gravite
+ref table Dim_Etat_Pilotage
+ref table Dim_Zone
+ref table Dim_Inspecteur
+ref table DateTableTemplate_c740e2ff-fc89-4215-930e-5595c76b96df
+ref table LocalDateTable_0abc55f7-969d-4a81-bb45-ae68a9a69cf5
+ref table LocalDateTable_cfc641bc-3d62-4c14-9cde-d6b90b7dfa5e
+ref table LocalDateTable_38c5d606-8074-449d-bb01-5b12b8a77785
+ref table LocalDateTable_5cd20596-4529-4a8e-a3ad-9008daa946f5
+ref table LocalDateTable_eee374b8-c945-4f02-889d-93db69dae4b5
+ref table LocalDateTable_8fd42289-c86e-4066-bcb5-a95c36c1770e
+
+ref cultureInfo fr-FR

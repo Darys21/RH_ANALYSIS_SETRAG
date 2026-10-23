@@ -1,0 +1,98 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "ed6ecc7ad56175cc7138",
+  "position": {
+    "x": 296.17021276595744,
+    "y": 121.09422492401215,
+    "z": 0,
+    "height": 163.40425531914894,
+    "width": 1597.5683890577507,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Nombre d'anomalies"
+                }
+              },
+              "queryRef": "Fact_Inspection.Nombre d'anomalies",
+              "nativeQueryRef": "Nombre d'anomalies"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Stock en attente"
+                }
+              },
+              "queryRef": "Fact_Inspection.Stock en attente",
+              "nativeQueryRef": "Stock en attente"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Anomalies en cours"
+                }
+              },
+              "queryRef": "Fact_Inspection.Anomalies en cours",
+              "nativeQueryRef": "Anomalies en cours"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Clôtures confirmées"
+                }
+              },
+              "queryRef": "Fact_Inspection.Clôtures confirmées",
+              "nativeQueryRef": "Clôtures confirmées"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fact_Inspection"
+                  }
+                },
+                "Property": "Nombre d'anomalies"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,58 @@
+table Dim_Etat_Pilotage
+	lineageTag: 33333333-4444-5555-6666-777777777701
+
+	column Etat_Pilotage
+		dataType: string
+		lineageTag: 33333333-4444-5555-6666-777777777702
+		summarizeBy: none
+		isKey
+		sortByColumn: Ordre_Etat
+		sourceColumn: [Etat_Pilotage]
+
+		annotation SummarizationSetBy = User
+
+	column Ordre_Etat = ```
+			SWITCH (
+			    TRUE (),
+			    [Etat_Pilotage] = "En attente", 1,
+			    [Etat_Pilotage] = "En cours", 2,
+			    [Etat_Pilotage] = "Clôture à vérifier", 3,
+			    [Etat_Pilotage] = "Clôture confirmée", 4,
+			    [Etat_Pilotage] = "À qualifier", 5,
+			    99
+			)
+			```
+		dataType: int64
+		formatString: 0
+		lineageTag: 33333333-4444-5555-6666-777777777703
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	column Groupe_Etat = ```
+			SWITCH (
+			    TRUE (),
+			    [Etat_Pilotage] IN { "En attente", "En cours" }, "Ouvert",
+			    [Etat_Pilotage] IN { "Clôture confirmée", "Clôture à vérifier" }, "Clôturé",
+			    "Autre"
+			)
+			```
+		dataType: string
+		lineageTag: 33333333-4444-5555-6666-777777777704
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	partition Dim_Etat_Pilotage = calculated
+		mode: import
+		source = ```
+				DISTINCT (
+				    SELECTCOLUMNS (
+				        FILTER (
+				            Fact_Inspection,
+				            NOT ISBLANK ( Fact_Inspection[Etat_Pilotage] )
+				        ),
+				        "Etat_Pilotage", Fact_Inspection[Etat_Pilotage]
+				    )
+				)
+				```

@@ -1,0 +1,153 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "9b9cafc389d7051a1bff",
+  "position": {
+    "x": 296.66666666666669,
+    "y": 668.33333333333337,
+    "z": 4000,
+    "height": 345,
+    "width": 810,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Thématique"
+                }
+              },
+              "queryRef": "Fact_Inspection.Thématique",
+              "nativeQueryRef": "Thématique",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Stock en attente"
+                }
+              },
+              "queryRef": "Fact_Inspection.Stock en attente",
+              "nativeQueryRef": "En attente ",
+              "displayName": "En attente "
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Clôtures confirmées"
+                }
+              },
+              "queryRef": "Fact_Inspection.Clôtures confirmées",
+              "nativeQueryRef": "Clôturé",
+              "displayName": "Clôturé"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_Inspection"
+                    }
+                  },
+                  "Property": "Nombre d'anomalies"
+                }
+              },
+              "queryRef": "Fact_Inspection.Nombre d'anomalies",
+              "nativeQueryRef": "Total",
+              "displayName": "Total"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "177.35876121818848D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_Inspection.Nombre d'anomalies"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "174.0654482547406D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_Inspection.Clôtures confirmées"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "202.66363580990804D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_Inspection.Stock en attente"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "153.33333333333334D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_Inspection.Thématique"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

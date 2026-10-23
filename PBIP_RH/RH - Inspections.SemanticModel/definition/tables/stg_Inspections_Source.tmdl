@@ -1,0 +1,310 @@
+table stg_Inspections_Source
+	isHidden
+	lineageTag: 5f7f8757-893f-44bd-8218-5cb7f052150b
+
+	column N°
+		dataType: int64
+		formatString: 0
+		lineageTag: 50e9d318-795a-47d1-891b-1fe1bfc8c88a
+		summarizeBy: sum
+		sourceColumn: N°
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date de réception'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 55b83f28-e112-4d40-b847-b0cd587939ec
+		summarizeBy: none
+		sourceColumn: Date de réception
+
+		variation Variation
+			isDefault
+			relationship: 422810a8-e372-4eac-9f98-e33be12fb4c3
+			defaultHierarchy: LocalDateTable_0abc55f7-969d-4a81-bb45-ae68a9a69cf5.'Hiérarchie de dates'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Thématique
+		dataType: string
+		lineageTag: 6c7a1c57-ddf5-4735-b606-ae1fa60e5b65
+		summarizeBy: none
+		sourceColumn: Thématique
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nom de l’écart'
+		dataType: string
+		lineageTag: 31ee1698-c9ed-4c68-abeb-2573577b7009
+		summarizeBy: none
+		sourceColumn: Nom de l’écart
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Détails de l’écart'
+		dataType: string
+		lineageTag: 5baa8121-cdb2-42e1-8968-a7af6595d266
+		summarizeBy: none
+		sourceColumn: Détails de l’écart
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Effets / Conséquences'
+		dataType: string
+		lineageTag: 0a55d33a-2068-41d6-839c-bafe89d220d5
+		summarizeBy: none
+		sourceColumn: Effets / Conséquences
+
+		annotation SummarizationSetBy = Automatic
+
+	column Lieu
+		dataType: string
+		lineageTag: c596162c-6c42-4f32-acf4-2463fd502819
+		summarizeBy: none
+		sourceColumn: Lieu
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Responsable de l’inspection'
+		dataType: string
+		lineageTag: f8235de2-0618-4e1c-9826-c6683ad63b22
+		summarizeBy: none
+		sourceColumn: Responsable de l’inspection
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Actions recommandées'
+		dataType: string
+		lineageTag: ff8de5d2-f71f-452e-a3f8-69a512b1315c
+		summarizeBy: none
+		sourceColumn: Actions recommandées
+
+		annotation SummarizationSetBy = Automatic
+
+	column Responsable
+		dataType: string
+		lineageTag: bf22d78f-5488-46e6-a732-74bc6a9691ea
+		summarizeBy: none
+		sourceColumn: Responsable
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gravité
+		dataType: string
+		lineageTag: 6a65df2b-0179-471f-b218-efa10743be95
+		summarizeBy: none
+		sourceColumn: Gravité
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Taux de réalisation'
+		dataType: double
+		lineageTag: c131db52-4078-4ee8-a27d-58b5ec978b30
+		summarizeBy: sum
+		sourceColumn: Taux de réalisation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Statut
+		dataType: string
+		lineageTag: adea2159-cc5d-418a-aa0b-13263f025f5e
+		summarizeBy: none
+		sourceColumn: Statut
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date de clôture'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0cc49659-5d0b-45a9-957d-75349845486c
+		summarizeBy: none
+		sourceColumn: Date de clôture
+
+		variation Variation
+			isDefault
+			relationship: 87fc2b20-fc41-4076-8403-d697f37aceaa
+			defaultHierarchy: LocalDateTable_cfc641bc-3d62-4c14-9cde-d6b90b7dfa5e.'Hiérarchie de dates'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Commentaire
+		dataType: string
+		lineageTag: 297d1e7f-7a3f-4b84-a683-a604f0537b95
+		summarizeBy: none
+		sourceColumn: Commentaire
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Document de référence'
+		dataType: string
+		lineageTag: 13dc0012-2b69-44fe-9144-fd27199ab946
+		summarizeBy: none
+		sourceColumn: Document de référence
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Qualité date réception'
+		dataType: string
+		lineageTag: 1b2a5f5c-2250-45a0-a742-468ae55d8889
+		summarizeBy: none
+		sourceColumn: Qualité date réception
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID_Inspection
+		dataType: int64
+		formatString: 0
+		lineageTag: c0f04685-a28f-4d4d-8b4b-1c1477c96be2
+		summarizeBy: none
+		sourceColumn: ID_Inspection
+
+		annotation SummarizationSetBy = Automatic
+
+	partition stg_Inspections_Source = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(
+				        File.Contents(
+				            "C:\Users\jyd.anguilet\OneDrive - Eramet SA\Indicateurs Infrastructures Sociales - INDICATEURS\Recap Inspections IS.xlsx"
+				        ),
+				        null,
+				        false
+				    ),
+				
+				    RECAP = Source{[Item = "RECAP", Kind = "Sheet"]}[Data],
+				
+				    LignesSource = Table.ToRows(RECAP),
+				
+				    PositionEntete = List.PositionOf(
+				        List.Transform(
+				            LignesSource,
+				            each
+				                List.Contains(_, "N°")
+				                and List.Contains(_, "Date de réception")
+				        ),
+				        true
+				    ),
+				
+				    DonneesAvecEntetes =
+				        if PositionEntete = -1 then
+				            error "Ligne d'entête introuvable dans la feuille RECAP."
+				        else
+				            Table.PromoteHeaders(
+				                Table.Skip(RECAP, PositionEntete),
+				                [PromoteAllScalars = true]
+				            ),
+				
+				    LignesNonVides = Table.SelectRows(
+				        DonneesAvecEntetes,
+				        each
+				            List.NonNullCount(
+				                List.Transform(
+				                    Record.FieldValues(_),
+				                    (Valeur) =>
+				                        if Valeur is text
+				                            and Text.Trim(Valeur) = ""
+				                        then null
+				                        else Valeur
+				                )
+				            ) > 0
+				    ),
+				
+				    ColonnesNettoyees = Table.TransformColumns(
+				        LignesNonVides,
+				        List.Transform(
+				            Table.ColumnNames(LignesNonVides),
+				            (NomColonne) =>
+				                {
+				                    NomColonne,
+				                    (Valeur) =>
+				                        if Valeur is text
+				                        then Text.Trim(Valeur)
+				                        else Valeur,
+				                    type any
+				                }
+				        )
+				    ),
+				
+				    StatutsNettoyes = Table.TransformColumns(
+				        ColonnesNettoyees,
+				        {
+				            {
+				                "Gravité",
+				                each
+				                    if _ is text
+				                    then Text.Proper(Text.Trim(_))
+				                    else _,
+				                type text
+				            }
+				        }
+				    ),
+				
+				    QualiteDateReception = Table.AddColumn(
+				        StatutsNettoyes,
+				        "Qualité date réception",
+				        each
+				            let
+				                DateTest = try Date.From(
+				                    [Date de réception],
+				                    "fr-FR"
+				                ) otherwise null
+				            in
+				                if DateTest = null
+				                    or DateTest = #date(1900, 1, 1)
+				                then "À vérifier"
+				                else "OK",
+				        type text
+				    ),
+				
+				    TypesCorriges = Table.TransformColumns(
+				        QualiteDateReception,
+				        {
+				            {
+				                "N°",
+				                each try Int64.From(_) otherwise null,
+				                Int64.Type
+				            },
+				            {
+				                "Date de réception",
+				                each
+				                    try Date.From(_, "fr-FR")
+				                    otherwise null,
+				                type date
+				            },
+				            {
+				                "Date de clôture",
+				                each
+				                    try Date.From(_, "fr-FR")
+				                    otherwise null,
+				                type date
+				            },
+				            {
+				                "Taux de réalisation",
+				                each try Number.From(_) otherwise null,
+				                type number
+				            }
+				        }
+				    ),
+				
+				    IdentifiantTechnique = Table.AddIndexColumn(
+				        TypesCorriges,
+				        "ID_Inspection",
+				        1,
+				        1,
+				        Int64.Type
+				    )
+				
+				in
+				    IdentifiantTechnique
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

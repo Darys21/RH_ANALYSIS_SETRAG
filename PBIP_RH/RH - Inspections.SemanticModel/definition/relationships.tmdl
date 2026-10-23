@@ -1,0 +1,66 @@
+relationship rel_Fact_DateReception
+	fromColumn: Fact_Inspection.'Date réception valide'
+	toColumn: Dim_Date.Date
+
+relationship rel_Fact_Thematique
+	fromColumn: Fact_Inspection.Thématique
+	toColumn: Dim_Thematique.Thematique
+
+relationship rel_Fact_Gravite
+	fromColumn: Fact_Inspection.Gravité
+	toColumn: Dim_Gravite.Gravite
+
+relationship rel_Fact_Etat
+	fromColumn: Fact_Inspection.Etat_Pilotage
+	toColumn: Dim_Etat_Pilotage.Etat_Pilotage
+
+relationship rel_Fact_Zone
+	fromColumn: Fact_Inspection.Zone
+	toColumn: Dim_Zone.Zone
+
+relationship rel_Fact_Inspecteur
+	fromColumn: Fact_Inspection.Inspecteur
+	toColumn: Dim_Inspecteur.Inspecteur
+
+relationship 422810a8-e372-4eac-9f98-e33be12fb4c3
+	isActive: false
+	joinOnDateBehavior: datePartOnly
+	fromColumn: stg_Inspections_Source.'Date de réception'
+	toColumn: LocalDateTable_0abc55f7-969d-4a81-bb45-ae68a9a69cf5.Date
+
+relationship 87fc2b20-fc41-4076-8403-d697f37aceaa
+	isActive: false
+	joinOnDateBehavior: datePartOnly
+	fromColumn: stg_Inspections_Source.'Date de clôture'
+	toColumn: LocalDateTable_cfc641bc-3d62-4c14-9cde-d6b90b7dfa5e.Date
+
+relationship 628685e5-f3c3-4164-a3c2-c8cf20081191
+	isActive: false
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Fact_Inspection.'Date de réception'
+	toColumn: LocalDateTable_38c5d606-8074-449d-bb01-5b12b8a77785.Date
+
+relationship cf142035-db8e-425b-8130-393243342597
+	isActive: false
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Fact_Inspection.'Date de clôture'
+	toColumn: LocalDateTable_5cd20596-4529-4a8e-a3ad-9008daa946f5.Date
+
+relationship 71d0ec51-1063-4861-83ec-d6a56536b0f4
+	isActive: false
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Fact_Inspection.'Date réception valide'
+	toColumn: LocalDateTable_eee374b8-c945-4f02-889d-93db69dae4b5.Date
+
+relationship 3f60bba0-13a2-4e13-96db-130fa0f9704f
+	isActive: false
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Fact_Inspection.'Date clôture valide'
+	toColumn: LocalDateTable_8fd42289-c86e-4066-bcb5-a95c36c1770e.Date
+
+relationship AutoDetected_b06df10a-3f6d-482b-9add-480aa6772425
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Fact_Inspection.ID_Inspection
+	toColumn: stg_Inspections_Source.ID_Inspection

@@ -1,0 +1,48 @@
+table Dim_Thematique
+	lineageTag: 11111111-2222-3333-4444-555555555501
+
+	column Thematique
+		dataType: string
+		lineageTag: 11111111-2222-3333-4444-555555555502
+		summarizeBy: none
+		isKey
+		sortByColumn: Ordre_Thematique
+		sourceColumn: [Thematique]
+
+		annotation SummarizationSetBy = User
+
+	column Ordre_Thematique = ```
+			SWITCH (
+			    TRUE (),
+			    [Thematique] = "Électricité", 1,
+			    [Thematique] = "Plomberie", 2,
+			    [Thematique] = "Menuiserie", 3,
+			    [Thematique] = "Assainissement", 4,
+			    [Thematique] = "Climatisation / Froid", 5,
+			    [Thematique] = "Serrurerie / Métallerie", 6,
+			    [Thematique] = "Étanchéité", 7,
+			    [Thematique] = "Maçonnerie", 8,
+			    [Thematique] = "Autres", 9,
+			    99
+			)
+			```
+		dataType: int64
+		formatString: 0
+		lineageTag: 11111111-2222-3333-4444-555555555503
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	partition Dim_Thematique = calculated
+		mode: import
+		source = ```
+				DISTINCT (
+				    SELECTCOLUMNS (
+				        FILTER (
+				            Fact_Inspection,
+				            NOT ISBLANK ( Fact_Inspection[Thématique] )
+				        ),
+				        "Thematique", Fact_Inspection[Thématique]
+				    )
+				)
+				```

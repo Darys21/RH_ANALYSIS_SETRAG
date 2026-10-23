@@ -1,0 +1,25 @@
+table Dim_Inspecteur
+	lineageTag: 55555555-6666-7777-8888-999999999901
+
+	column Inspecteur
+		dataType: string
+		lineageTag: 55555555-6666-7777-8888-999999999902
+		summarizeBy: none
+		isKey
+		sourceColumn: [Inspecteur]
+
+		annotation SummarizationSetBy = User
+
+	partition Dim_Inspecteur = calculated
+		mode: import
+		source = ```
+				DISTINCT (
+				    SELECTCOLUMNS (
+				        FILTER (
+				            Fact_Inspection,
+				            NOT ISBLANK ( Fact_Inspection[Inspecteur] )
+				        ),
+				        "Inspecteur", Fact_Inspection[Inspecteur]
+				    )
+				)
+				```
