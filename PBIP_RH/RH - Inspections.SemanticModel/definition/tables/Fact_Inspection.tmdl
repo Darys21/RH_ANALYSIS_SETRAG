@@ -1,1 +1,16 @@
-PLACEHOLDER
+table Fact_Inspection
+	lineageTag: 2f176e11-dc8e-46f1-bb36-6a2c6b4a7c69
+
+	measure 'Nombre d''anomalies' = ```
+			COUNTROWS(Fact_Inspection)
+			
+			```
+		formatString: 0
+		lineageTag: e5c1c1b0-acf7-47dc-97a5-c1fcfe0e746c
+
+	measure 'Stock en attente' = ```
+			CALCULATE([Nombre d'anomalies], Fact_Inspection[Etat_Pilotage] = "En attente")
+			
+			```
+		formatString: 0
+		lineageTag: a405ba0b-2227-4ece-a9d9-e5ee3abaed73
