@@ -838,16 +838,16 @@ table Fact_Inspection
 				        }
 				    ),
 				
-					    // Inspecteur : premier nom saisi, casse harmonisée
+					    // Inspecteur : retirer Lydie si un autre nom est présent ; sinon retenir le premier nom.
 					    InspecteurNormalise = Table.AddColumn(
 					        ResponsableNormalise,
 					        "Inspecteur",
 					        each
-					    if [#"Responsable de l'inspection"] = null then
+					            if [#"Responsable de l'inspection"] = null then
 					                null
 					            else
 					                let
-					                    Brut = [#"Responsable de l'inspection"],
+					                    Brut = Text.Trim([#"Responsable de l'inspection"]),
 					                    Separes = Text.Replace(
 					                        Text.Replace(
 					                            Text.Replace(
@@ -865,17 +865,25 @@ table Fact_Inspection
 					                        "/",
 					                        ","
 					                    ),
-					                    Premier = List.First(
+					                    Noms = List.Transform(
 					                        List.Select(
 					                            Text.Split(Separes, ","),
 					                            each Text.Trim(_) <> ""
-					                        )
-					                    )
+					                        ),
+					                        each Text.Trim(_)
+					                    ),
+					                    NomsSansLydie = List.Select(
+					                        Noms,
+					                        each Text.Lower(_) <> "lydie"
+					                    ),
+					                    NomsRetenus =
+					                        if List.Count(NomsSansLydie) > 0 then NomsSansLydie else Noms,
+					                    Premier = if List.Count(NomsRetenus) > 0 then List.First(NomsRetenus) else null
 					                in
-					                    if Premier = null then null else Text.Proper(Text.Trim(Premier)),
+					                    if Premier = null then null else Text.Proper(Premier),
 					        type nullable text
-					    ),
-					
+				    ),
+
 					    // 13. Rattachement au site (périmètre de la revue)
 					    Zone = Table.AddColumn(
 					        InspecteurNormalise,
